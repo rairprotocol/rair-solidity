@@ -1,0 +1,25 @@
+{
+  "name": "rair-diamonds",
+  "version": "1.0.0",
+  "description": "Diamond Contract implementation for RAIR",
+  "main": "index.js",
+  "scripts": {
+    "test": "hardhat test"
+  },
+  "keywords": [
+    "solidity",
+    "hardhat"
+  ],
+  "author": "Juan Miguel Sanchez Mola",
+  "license": "ISC",
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.8.1",
+    "dotenv": "^16.0.3",
+    "hardhat": "^2.12.6",
+    "hardhat-contract-sizer": "^2.7.0",
+    "hardhat-gas-reporter": "^1.0.9"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^2.0.1"
+  }
+}
