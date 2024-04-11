@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.11; 
+pragma solidity ^0.8.25; 
 
 import '@openzeppelin/contracts/access/IAccessControl.sol';
 import '../AppStorage.sol';
@@ -119,10 +119,6 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 		mintOffer = selectedOffer;
 	}
 
-	function getAllOffers() public view returns (mintingOffer[] memory mintOffers) {
-		mintOffers = s.mintingOffers;
-	}
-
 	/// @notice This function show us the information of an selected minting offer
 	/// @param 		offerIndex Contains the facet addresses and function selectors
 	/// @return 	mintOffer Show us the information about the minting offer 
@@ -198,7 +194,7 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 			uint totalPercentage = s.nodeFee + s.treasuryFee;
 			uint totalFunds = rangeData.rangePrice * totalPercentage / (100 * s.decimalPow);
 			for (uint i = 0; i < splits.length; i++) {
-				require(!isContract(splits[i].recipient), "Minter Marketplace: Contracts can't be recipients of the splits");
+				require(splits[i].canBeContract || !isContract(splits[i].recipient), "Minter Marketplace: Contracts can't be recipients of the splits");
 				uint splitForPercentage = rangeData.rangePrice * splits[i].percentage / (100 * s.decimalPow);
 				require(
 					splitForPercentage > 0,
@@ -248,7 +244,7 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 		uint totalPercentage = s.nodeFee + s.treasuryFee;
 		delete selectedOffer.fees;
 		for (uint i = 0; i < splits_.length; i++) {
-			require(!isContract(splits_[i].recipient), "Minter Marketplace: Contracts can't be recipients of fees");
+			require(splits_[i].canBeContract || !isContract(splits_[i].recipient), "Minter Marketplace: Contracts can't be recipients of fees");
 			require(
 				rangeData.rangePrice * splits_[i].percentage / (100 * s.decimalPow) > 0,
 				"Minter Marketplace: A percentage on the array will result in an empty transfer"

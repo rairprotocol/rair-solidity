@@ -1,26 +1,90 @@
-require("@nomicfoundation/hardhat-toolbox");
+require("@nomiclabs/hardhat-waffle");
+require("@nomiclabs/hardhat-ethers");
+require("@nomiclabs/hardhat-etherscan");
+require('hardhat-deploy');
+require('hardhat-contract-sizer');
 require("hardhat-gas-reporter");
-require("hardhat-contract-sizer");
-require("dotenv").config();
+require('dotenv').config()
 
-/** @type import('hardhat/config').HardhatUserConfig */
+/**
+ * @type import('hardhat/config').HardhatUserConfig
+ */
+
 module.exports = {
-  solidity: "0.8.17",
-  gasReporter: {
-    enabled: true,
-  },
-  contractSizer: {
-    alphaSort: true,
-    disambiguatePaths: false,
-    runOnCompile: true,
-    strict: true,
-  },
-  networks: {
+	networks: {
 		hardhat: {
 			forking: {
 				url: process.env.ETH_MAIN_RPC,
-				blockNumber: 16000000
+				blockNumber: 19000000
 			}
 		},
-  },
+		"0x1": {
+			url: process.env.ETH_MAIN_RPC,
+			accounts: [process.env.ADDRESS_PRIVATE_KEY],
+		},
+		"0x89": {
+			url: process.env.MATIC_RPC,
+			accounts: [process.env.ADDRESS_PRIVATE_KEY],
+		},
+		"0x250": {
+			url: process.env.ASTAR_RPC,
+			accounts: [process.env.ADDRESS_PRIVATE_KEY],
+		},
+		"0xaa36a7": {
+			url: process.env.SEPOLIA_RPC,
+			accounts: [process.env.ADDRESS_PRIVATE_KEY]
+		}
+	},
+	solidity: {
+		compilers: [{
+			version: "0.8.25",
+			settings: {
+				optimizer: {
+					enabled: true,
+					runs: 200
+				}
+			}
+		},{
+			version: "0.8.19",
+			settings: {
+				optimizer: {
+					enabled: true,
+					runs: 200
+				}
+			}
+		}],
+	},
+	contractSizer: {
+		runOnCompile: true,
+		strict: true
+	},
+	mocha: {
+		timeout: 0
+	},
+	gasReporter: {
+		currency: 'USD',
+		showTimeSpent: true,
+		coinmarketcap: process.env.COINMARKETCAP_API_KEY || undefined
+	},
+	etherscan: {
+		apiKey: {
+			mainnet: process.env.ETHERSCAN_API_KEY,
+			sepolia: process.env.ETHERSCAN_API_KEY,
+
+			polygon: process.env.POLYGONSCAN_API_KEY,
+			polygonMumbai: process.env.POLYGONSCAN_API_KEY,
+
+			astar: "according to the documentation any value is valid here",
+		},
+		customChains: [
+			{
+				network: "astar",
+				chainId: 592,
+				urls: {
+					apiURL: "https://blockscout.com/astar/api",
+					browserURL: "https://blockscout.com/astar"
+				}
+			}
+		],
+	}
 };
