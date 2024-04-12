@@ -1,5 +1,6 @@
 # RAIR Smart Contracts
 Source code and deployment scripts for RAIR smart contracts.
+Notice: classic-contracts are deprecated contracts, for deployment you'll need to modify the deployment scripts with your addresses.
 
 ## Setup
 Environment variables  
@@ -10,6 +11,7 @@ Environment variables
 | SEPOLIA_RPC | RPC endpoint for Ethereum Sepolia | 
 | AMOY_RPC | RPC endpoint for Matic Amoy |
 | MATIC_RPC | RPC endpoint for Matic Mainnet |
+| BASE_RPC | RPC endpoint for Base Mainnet |
 | ADDRESS_PRIVATE_KEY | Private key of the deployer wallet |
 | COINMARKETCAP_API_KEY | API Key from coinmarketcap for hardhat's gas price estimations (optional) |
 | ETHERSCAN_API_KEY | API key for Etherscan (used for verifying contracts) |
@@ -24,14 +26,40 @@ Inside the deploy directory you'll find the scripts for all of the diamond contr
 | Marketplace | Minting and resale offers |
 | Facet Source | Diamond contract from which all ERC721 contracts get their facets |
 
-The deployment process is automated, the deployment is done thanks to hardhat-deploy and the verification is done through hardhat-etherscan.  All deployed contracts can be found in the "deployments" directory
+The deployment process is automated, it is done thanks to hardhat-deploy and the verification is done through hardhat-verify.  All deployed contracts can be found in the "deployments" directory
 
 ## Testing
 ```npm run test``` will start the local testing on an ethereum mainnet fork, the main test script is under the "test" directory
 
-### Setup
-* Factory
-    * changeToken(<erc20 address>, <price to deploy>)
+## Setup
+### Connecting the facets
+Once all diamond facets are verified you'll need to connect them with the diamondCut function
+* Necessary for all 3 contracts:
+    * DiamondCutFacet
+    * DiamondLoupeFacet
+    * OwnershipFacet
+* Addresses for Factory
+    * CreatorsFacet
+	* DeployerFacet
+	* TokensFacet
+    * PointsDeposit
+	* PointsQuery
+	* PointsWithdraw
+* Addresses for Marketplace
+    * MintingOffersFacet
+    * FeesFacet
+    * ResaleFacet
+* Addresses for the ERC721 source
+    * ERC721EnumerableFacet
+    * RAIRMetadataFacet
+    * RAIRProductFacet
+    * RAIRRangesFacet
+    * RAIRRoyaltiesFacet
 
-* Marketplace
-    * grantRole(RESALE_ADMIN, <signer address>)
+### Setup calls
+| Functions | Description |
+| --- | --- | 
+| Factory.changeToken(<erc20 address>, <price to deploy>) | Configure the factory to use tokens from the ERC20 to deploy |
+| Marketplace.updateTreasuryAddress(<treasury address>) | Set the address for the treasury fees |
+| Marketplace.updateTreasuryFee(<value>) | Percentage the treasury will receive on every mint  |
+| Marketplace.grantRole(RESALE_ADMIN, <signer address>) | Approve an user address to generate resale hashes |
