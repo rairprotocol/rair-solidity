@@ -1,6 +1,6 @@
-const {deployments} = require('hardhat');
+const {deployments, ethers} = require('hardhat');
 
-module.exports = async ({getUnnamedAccounts}) => {
+module.exports = async ({accounts, getUnnamedAccounts}) => {
   const {deploy} = deployments;
   const [deployerAddress] = await getUnnamedAccounts();
   console.log('Factory deployed at', (await deploy('RAIR_Token_Factory', {

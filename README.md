@@ -1,6 +1,6 @@
 # RAIR Smart Contracts
 Source code and deployment scripts for RAIR smart contracts.
-Notice: classic-contracts are deprecated contracts, for deployment you'll need to modify the deployment scripts with your addresses.
+Notice: classic-contracts are deprecated
 
 ## Setup
 Environment variables  
@@ -59,7 +59,8 @@ Once all diamond facets are verified you'll need to connect them with the diamon
 ### Setup calls
 | Functions | Description |
 | --- | --- | 
-| Factory.changeToken(<erc20 address>, <price to deploy>) | Configure the factory to use tokens from the ERC20 to deploy |
-| Marketplace.updateTreasuryAddress(<treasury address>) | Set the address for the treasury fees |
-| Marketplace.updateTreasuryFee(<value>) | Percentage the treasury will receive on every mint  |
-| Marketplace.grantRole(RESALE_ADMIN, <signer address>) | Approve an user address to generate resale hashes |
+| Factory.changeToken(ERC20 address, Price for deployment) | Configure the factory to use tokens from the ERC20 to deploy |
+| Factory.setSourceFacet(Facet source address) | Connect the factory to the main hub of diamond facets |
+| Marketplace.updateTreasuryAddress(Treasury address) | Set the address for the treasury fees |
+| Marketplace.updateTreasuryFee(Value) | Percentage the treasury will receive on every mint  |
+| Marketplace.grantRole(RESALE_ADMIN, Signer address) | Approve an user address to generate resale hashes |

@@ -10,11 +10,21 @@ library ResaleStorage {
         uint percentage;
     }
 
+    struct resaleOffer {
+        address erc721;
+        address buyer;
+        address seller;
+        uint token;
+        uint tokenPrice;
+        address nodeAddress;
+    }
+
     struct Layout {
         mapping(address => feeSplits[]) royaltySplits;
         mapping(address => address) contractOwner;
         uint purchaseGracePeriod;
         uint decimalPow;
+        resaleOffer[] resaleOffers;
     }
 
     function layout() internal pure returns (Layout storage l) {

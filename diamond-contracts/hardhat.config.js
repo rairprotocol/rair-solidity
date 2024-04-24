@@ -15,7 +15,7 @@ module.exports = {
 		hardhat: {
 			forking: {
 				url: process.env.ETH_MAIN_RPC,
-				blockNumber: 19000000
+				blockNumber: 19600000
 			}
 		},
 		"0x1": {
@@ -86,15 +86,15 @@ module.exports = {
 			polygonAmoy: process.env.OKLINK_API_KEY,
 
 			base: process.env.BASESCAN_API_KEY,
-			astar: "according to the documentation any value is valid here",
+			astar: process.env.BLOCKSCOUT_API_KEY,
 		},
 		customChains: [
 			{
 				network: "astar",
 				chainId: 592,
 				urls: {
-					apiURL: "https://blockscout.com/astar/api",
-					browserURL: "https://blockscout.com/astar"
+					apiURL: "https://astar.blockscout.com/api/",
+					browserURL: "https://astar.blockscout.com/"
 				}
 			},
 			{

@@ -11,8 +11,8 @@ const initialRAIR20Supply = 10000;
 const priceToDeploy = 150;
 
 // Expected deployment addresses
-const firstDeploymentAddress = '0x289e0B095F582939e765a4732573DCF01d5c7Ba1';
-const secondDeploymentAddress = '0x948cCa5EA1b379eF9ECF859a3539f57372AB5694';
+const firstDeploymentAddress = '0xe098BeE2A5Be96dffa0BF7280934C2d6e4584a1a';
+const secondDeploymentAddress = '0x548b489C7c4E706B261db362fde75092a0152Ac2';
 
 let usedSelectorsForFactory = {};
 let usedSelectorsForMarketplace = {};
@@ -2399,6 +2399,85 @@ describe("Diamonds", function () {
 					52000,
 					120000,
 				])
+		});
+
+		it ("Shouldn't create resale offers if user is not owner of token", async () => {
+			const resaleInstance = await ethers.getContractAt(
+				'ResaleFacet',
+				marketDiamondInstance.address
+			);
+			await expect(resaleInstance.createGasTokenOffer(
+				secondDeploymentAddress, // ERC721 address
+				0,						 // Token number
+				300000,					 // Token Price
+				nodeAddress.address		 // Node address
+			)).to.be.revertedWith("Resale: Not the current owner of the token");
+		});
+
+		it ("Should create resale offers (stored in the blockchain)", async () => {
+			const resaleInstance = (await ethers.getContractAt(
+				'ResaleFacet',
+				marketDiamondInstance.address
+			)).connect(addr3);
+			await expect(await resaleInstance.createGasTokenOffer(
+				secondDeploymentAddress, // ERC721 address
+				0,						 // Token number
+				300000,					 // Token Price
+				nodeAddress.address		 // Node address
+			)).to.emit(resaleInstance, 'TokenOfferCreated')
+				.withArgs(
+					secondDeploymentAddress, // ERC721 address
+					addr3.address,			 // Seller address
+					0,						 // Token ID
+					300000,					 // Token Price
+					0						 // Offer ID
+				)
+		});
+
+		it ("Shouldn't purchase resale offers without enough funds", async () => {
+			const resaleInstance = await ethers.getContractAt('ResaleFacet', marketDiamondInstance.address);
+			await expect(resaleInstance.purchaseGasTokenOffer(
+				0, // Offer Id
+				{value: 2000}
+			)).to.be.revertedWith("Resale: Insufficient funds!");
+		});
+
+		it ("Should purchase resale offers (stored in the blockchain)", async () => {
+			const resaleInstance = await ethers.getContractAt('ResaleFacet', marketDiamondInstance.address);
+			await expect(await resaleInstance.purchaseGasTokenOffer(
+				0, // Offer Id
+				{value: 300000}
+			)).to.emit(resaleInstance, 'TokenSold')
+				.withArgs(
+					secondDeploymentAddress,	// erc721,
+					owner.address,				// buyer,
+					addr3.address,				// seller,
+					0, 							// token,
+					300000,						// tokenPrice
+				)
+				.changeEtherBalances([
+					owner,	// Buyer
+					nodeAddress,
+					treasuryAddress,
+					addr4,
+					addr1,
+					addr3, // Seller
+				], [
+					-300000,
+					15000,
+					15000,
+					12000,
+					78000,
+					180000,
+				])
+		});
+
+		it ("Shouldn't purchase resale offers twice", async () => {
+			const resaleInstance = await ethers.getContractAt('ResaleFacet', marketDiamondInstance.address);
+			await expect(resaleInstance.purchaseGasTokenOffer(
+				0, // Offer Id
+				{value: 300000}
+			)).to.be.revertedWith("Resale: Offer already purchased")
 		});
 	});
 
