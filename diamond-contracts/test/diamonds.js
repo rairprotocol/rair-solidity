@@ -11,8 +11,8 @@ const initialRAIR20Supply = 10000;
 const priceToDeploy = 150;
 
 // Expected deployment addresses
-const firstDeploymentAddress = '0xe098BeE2A5Be96dffa0BF7280934C2d6e4584a1a';
-const secondDeploymentAddress = '0x548b489C7c4E706B261db362fde75092a0152Ac2';
+const firstDeploymentAddress = '0x4D86E5917eA0542Bd330BC6b8a576e9E4595F9eC';
+const secondDeploymentAddress = '0x5fA238add25567Ea714f218A4CB789EE3eFD72b8';
 
 let usedSelectorsForFactory = {};
 let usedSelectorsForMarketplace = {};
@@ -50,6 +50,8 @@ describe("Diamonds", function () {
 	let PointsWithdrawFactory, pointsWithdrawInstance;
 
 	let FacetSourceFactory, facetSourceInstance;
+
+	let ExchangeFactory, exchangeInstance;
 
 	beforeEach(async () => {
 		//console.log(ethers.utils.formatEther(await ethers.provider.getBalance(owner.address)));
@@ -103,15 +105,21 @@ describe("Diamonds", function () {
 
 		// Malicious contracts for testing
 		ReceiveEthAttackerFactory = await ethers.getContractFactory("ReceiveEthAttacker");
+		ExchangeFactory = await ethers.getContractFactory("ERC20Exchange");
 	});
 
-	describe("Deploying external contracts", () => {
+	describe("Deploying normal contracts", () => {
 		it ("Should deploy two ERC20 contracts", async () => {
 			erc20Instance = await ERC20Factory.deploy("RAIR One", "RAIR1", initialRAIR20Supply, owner.address);
 			extraERC20Instance = await ERC20Factory.deploy("RAIR Two", "RAIR2", initialRAIR20Supply / 2, owner.address);
 			await erc20Instance.deployed();
 			await extraERC20Instance.deployed();
-		})
+		});
+
+		it ("Should deploy the License Exchange", async () => {
+			exchangeInstance = await ExchangeFactory.deploy(extraERC20Instance.address);
+			await exchangeInstance.deployed();
+		});
 	});
 
 	describe("Deploying the Diamond Contract", () => {
@@ -2479,6 +2487,123 @@ describe("Diamonds", function () {
 				{value: 300000}
 			)).to.be.revertedWith("Resale: Offer already purchased")
 		});
+	});
+
+	describe("Exchange", () => {
+		it ("Shouldn't allow non admins to modify settings", async () => {
+			const exchangeWithAddr1 = (exchangeInstance).connect(addr1);
+			await expect(exchangeWithAddr1.updateERC20Address(erc20Instance.address))
+				.to.be.revertedWith("AccessControlUnauthorizedAccount");
+			await expect(exchangeWithAddr1.metadataConfig("asdasd", "json"))
+				.to.be.revertedWith("AccessControlUnauthorizedAccount");
+			await expect(exchangeWithAddr1.setPurchasePeriod(120))
+				.to.be.revertedWith("AccessControlUnauthorizedAccount");
+		});
+
+		it ("Should setup all settings", async () => {
+			await expect(await exchangeInstance.updateERC20Address(erc20Instance.address))
+				.to.not.be.reverted;
+			await expect(await exchangeInstance.metadataConfig("google.com/rair/", "json"))
+				.to.not.be.reverted;
+			await expect(await exchangeInstance.setPurchasePeriod(120))
+				.to.not.be.reverted;
+		});
+
+		it ("Should generate hash and mint token", async () => {
+			await erc20Instance.transfer(addr3.address, 2000);
+			const hash = await exchangeInstance.generateLicenseHash(
+				412, 			// Index,
+				addr3.address, 	// Buyer,
+				200				// Price
+			);
+			const signedHash = await owner.signMessage(ethers.utils.arrayify(hash));
+
+			const exchangeWithAddr3 = (exchangeInstance).connect(addr3);
+			const erc20WithAddr3 = (erc20Instance).connect(addr3);
+			await erc20WithAddr3.approve(exchangeInstance.address, 400);
+
+			await expect(await exchangeWithAddr3.mint(
+				412, 			// Index
+				200, 			// Price
+				signedHash, 	// Hash
+			)).to.emit(exchangeInstance, "Transfer")
+				.withArgs(
+					ethers.constants.AddressZero,
+					addr3.address,
+					412
+				);
+		});
+
+		it ("Shouldn't mint token with the same hash twice", async () => {
+			const hash = await exchangeInstance.generateLicenseHash(
+				813, 			// Index,
+				addr3.address, 	// Buyer,
+				100				// Price
+			);
+			const signedHash = await owner.signMessage(ethers.utils.arrayify(hash));
+
+			const exchangeWithAddr3 = (exchangeInstance).connect(addr3);
+
+			// Shouldn't mint with invalid price
+			await expect(exchangeWithAddr3.mint(
+				813, 			// Index
+				50, 			// Price
+				signedHash, 	// Hash
+			)).to.be.revertedWith('License Mint: Invalid signature');
+
+			await expect(await exchangeWithAddr3.mint(
+				813, 			// Index
+				100, 			// Price
+				signedHash, 	// Hash
+			)).to.emit(exchangeInstance, "Transfer")
+				.withArgs(
+					ethers.constants.AddressZero,
+					addr3.address,
+					813
+				);
+
+			// Shouldn't mint again
+			await expect(exchangeWithAddr3.mint(
+				813, 			// Index
+				100, 			// Price
+				signedHash, 	// Hash
+			)).to.be.revertedWith('ERC721InvalidSender');
+
+			// Shouldn't mint the wrong number
+			await expect(exchangeWithAddr3.mint(
+				812, 			// Index
+				100, 			// Price
+				signedHash, 	// Hash
+			)).to.be.revertedWith('License Mint: Invalid signature');
+
+			// Shouldn't mint with the wrong user
+			await expect(exchangeInstance.mint(
+				813, 			// Index
+				100, 			// Price
+				signedHash, 	// Hash
+			)).to.be.revertedWith('License Mint: Invalid signature');
+			
+		});
+
+		it ("Shouldn't mint after time expires", async () => {
+			const hash = await exchangeInstance.generateLicenseHash(
+				901, 			// Index,
+				addr3.address, 	// Buyer,
+				100				// Price
+			);
+			const signedHash = await owner.signMessage(ethers.utils.arrayify(hash));
+
+			const exchangeWithAddr3 = (exchangeInstance).connect(addr3);
+
+			await time.increase(120);
+
+			await expect(exchangeWithAddr3.mint(
+				901, 			// Index
+				100, 			// Price
+				signedHash, 	// Hash
+			)).to.be.revertedWith('License Mint: Invalid signature')
+		});
+
 	});
 
 	describe("Loupe Facet", () => {

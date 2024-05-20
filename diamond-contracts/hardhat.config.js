@@ -15,7 +15,7 @@ module.exports = {
 		hardhat: {
 			forking: {
 				url: process.env.ETH_MAIN_RPC,
-				blockNumber: 19600000
+				blockNumber: 19878681
 			}
 		},
 		"0x1": {

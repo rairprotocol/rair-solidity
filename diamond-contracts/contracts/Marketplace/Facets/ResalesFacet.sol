@@ -5,12 +5,13 @@ import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 import { ResaleStorage } from "../Storage/ResaleStorage.sol";
 import { IERC721 } from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import { AccessControlAppStorageEnumerableMarket } from "../AppStorage.sol";
+import { SignedHashProtection } from "../../common/SignedHashProtection.sol";
 
 /// @title  RAIR Diamond - Resale Marketplace facet
 /// @notice Facet in charge of transfering NFTs and funds
 /// @author Juan M. Sanchez M.
 /// @dev 	Uses signed messages for gasless offer postings
-contract ResaleFacet is AccessControlAppStorageEnumerableMarket {
+contract ResaleFacet is AccessControlAppStorageEnumerableMarket, SignedHashProtection {
 	bytes32 private constant CREATOR = keccak256("CREATOR");
 	bytes32 private constant DEFAULT_ADMIN_ROLE = 0x0;
 	bytes32 public constant MAINTAINER = keccak256("MAINTAINER");
@@ -82,33 +83,6 @@ contract ResaleFacet is AccessControlAppStorageEnumerableMarket {
                 roundedTime()
             )
         );
-    }
-
-    function getSignedMessageHash(
-        bytes32 messageHash
-    ) internal pure returns (bytes32) {
-        return keccak256(
-            abi.encodePacked("\x19Ethereum Signed Message:\n32", messageHash)
-        );
-    }
-
-    function recoverSigner(
-        bytes32 signedMessageHash,
-        bytes memory signature
-    ) internal pure returns (address) {
-        (bytes32 r, bytes32 s, uint8 v) = splitSignature(signature);
-        return ecrecover(signedMessageHash, v, r, s);
-    }
-
-    function splitSignature(
-        bytes memory sig
-    ) internal pure returns (bytes32 r, bytes32 s, uint8 v) {
-        require(sig.length == 65, "Resale: invalid signature length");
-        assembly {
-            r := mload(add(sig, 32))
-            s := mload(add(sig, 64))
-            v := byte(0, mload(add(sig, 96)))
-        }
     }
 
     function _sendToken(
