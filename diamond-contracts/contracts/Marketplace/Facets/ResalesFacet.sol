@@ -96,6 +96,14 @@ contract ResaleFacet is AccessControlAppStorageEnumerableMarket, SignedHashProte
         emit TokenSold(erc721, buyer, seller, token, tokenPrice);
     }
 
+    function transferCheck(
+        address targetAddress,
+        uint amount
+    ) internal {
+        (bool sent, ) = payable(targetAddress).call{value: amount}("");
+        require(sent, "Resale: Transfer failed");
+    }
+
     function _distributeFees(
         address erc721,
         uint tokenPrice,
@@ -106,26 +114,26 @@ contract ResaleFacet is AccessControlAppStorageEnumerableMarket, SignedHashProte
         require(tokenPrice <= msg.value, "Resale: Insufficient funds!");
         uint leftoverForSeller = tokenPrice;
         if (msg.value - tokenPrice > 0) {
-            payable(msg.sender).transfer(msg.value - tokenPrice);
+            transferCheck(msg.sender, msg.value - tokenPrice);
         }
 
         uint toPay = tokenPrice * s.nodeFee / (100 * s.decimalPow);
-        payable(nodeAddress).transfer(toPay);
+        transferCheck(nodeAddress, toPay);
         uint totalTransferred = toPay;
         leftoverForSeller -= toPay;
 
         toPay = tokenPrice * s.treasuryFee / (100 * s.decimalPow);
-        payable(s.treasuryAddress).transfer(toPay);
+        transferCheck(s.treasuryAddress, toPay);
         totalTransferred += toPay;
         leftoverForSeller -= toPay;
 
         for (uint i = 0; i < royaltyData.length; i++) {
             toPay = tokenPrice * royaltyData[i].percentage / (100 * s.decimalPow);
-            payable(royaltyData[i].recipient).transfer(toPay);
+            transferCheck(royaltyData[i].recipient, toPay);
             totalTransferred += toPay;
             leftoverForSeller -= toPay;
         }
-        payable(address(seller)).transfer(leftoverForSeller);
+        transferCheck(seller, leftoverForSeller);
         totalTransferred += leftoverForSeller;
         require(totalTransferred == tokenPrice, "Resale: Error transferring funds!");
     }
@@ -147,12 +155,18 @@ contract ResaleFacet is AccessControlAppStorageEnumerableMarket, SignedHashProte
         newOffer.tokenPrice = tokenPrice;
         newOffer.nodeAddress = nodeAddress;
         emit TokenOfferCreated(
-            erc721,
-            msg.sender,
-            token,
-            tokenPrice,
+            newOffer.erc721,
+            newOffer.seller,
+            newOffer.token,
+            newOffer.tokenPrice,
             ResaleStorage.layout().resaleOffers.length - 1
         );
+    }
+
+    function getResaleOffer(
+        uint offerIndex
+    ) public view returns (ResaleStorage.resaleOffer memory offer) {
+        offer = ResaleStorage.layout().resaleOffers[offerIndex];
     }
 
     function purchaseGasTokenOffer(

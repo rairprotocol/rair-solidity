@@ -2442,6 +2442,18 @@ describe("Diamonds", function () {
 				)
 		});
 
+		it ("Should display created offers", async () => {
+			const resaleInstance = (await ethers.getContractAt(
+				'ResaleFacet',
+				marketDiamondInstance.address
+			));
+			const result = await resaleInstance.getResaleOffer(0);
+			await expect(result.erc721).to.equal(secondDeploymentAddress);
+			await expect(result.seller).to.equal(addr3.address);
+			await expect(result.token).to.equal(0);
+			await expect(result.tokenPrice).to.equal(300000);
+		});
+
 		it ("Shouldn't purchase resale offers without enough funds", async () => {
 			const resaleInstance = await ethers.getContractAt('ResaleFacet', marketDiamondInstance.address);
 			await expect(resaleInstance.purchaseGasTokenOffer(
