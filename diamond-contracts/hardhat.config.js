@@ -10,41 +10,71 @@ require('dotenv').config()
  * @type import('hardhat/config').HardhatUserConfig
  */
 
+const {
+	ADDRESS_PRIVATE_KEY, 	// Private key used in deployment and testing
+	ETH_MAIN_RPC, 			// RPCs for deployments, ETH_MAIN is also used for testing
+	MATIC_RPC,
+	ASTAR_RPC,
+	SEPOLIA_RPC,
+	AMOY_RPC,
+	BASE_RPC,
+	CORE_RPC,
+	COINMARKETCAP_API_KEY,
+	ETHERSCAN_API_KEY,
+	POLYGONSCAN_API_KEY,
+	OKLINK_API_KEY,
+	BASESCAN_API_KEY,
+	BLOCKSCOUT_API_KEY,
+	CORESCAN_API_KEY,
+} = process.env;
+
+
+const commonConfig = {
+	accounts: [ADDRESS_PRIVATE_KEY]
+}
+
 module.exports = {
 	networks: {
+		// This blockchain will be used in the test cases
 		hardhat: {
 			forking: {
-				url: process.env.ETH_MAIN_RPC,
-				blockNumber: 19878681
+				url: ETH_MAIN_RPC,
+				blockNumber: 20467191
 			}
 		},
+		// The rest of the blockchains are for deployment
 		"0x1": {
-			url: process.env.ETH_MAIN_RPC,
-			accounts: [process.env.ADDRESS_PRIVATE_KEY],
+			url: ETH_MAIN_RPC,
+			...commonConfig,
 		},
 		"0x89": {
-			url: process.env.MATIC_RPC,
-			accounts: [process.env.ADDRESS_PRIVATE_KEY],
+			url: MATIC_RPC,
+			...commonConfig,
 		},
 		"0x250": {
-			url: process.env.ASTAR_RPC,
-			accounts: [process.env.ADDRESS_PRIVATE_KEY],
+			url: ASTAR_RPC,
+			...commonConfig,
 		},
 		"0xaa36a7": {
-			url: process.env.SEPOLIA_RPC,
-			accounts: [process.env.ADDRESS_PRIVATE_KEY]
+			url: SEPOLIA_RPC,
+			...commonConfig,
 		},
 		"0x13882": {
-			url: process.env.AMOY_RPC,
-			accounts: [process.env.ADDRESS_PRIVATE_KEY]
+			url: AMOY_RPC,
+			...commonConfig,
 		},
 		"0x2105": {
-			url: process.env.BASE_RPC,
-			accounts: [process.env.ADDRESS_PRIVATE_KEY]
+			url: BASE_RPC,
+			...commonConfig,
+		},
+		"0x45c": {
+			url: CORE_RPC,
+			...commonConfig,
 		}
 	},
 	solidity: {
 		compilers: [{
+			// All code uses this version of Solidity compiler
 			version: "0.8.25",
 			settings: {
 				optimizer: {
@@ -53,6 +83,7 @@ module.exports = {
 				}
 			}
 		},{
+			// Nick Mudge's diamond contracts use this version of the compiler
 			version: "0.8.19",
 			settings: {
 				optimizer: {
@@ -62,6 +93,7 @@ module.exports = {
 			}
 		}],
 	},
+	// Contract sizer tool, reports total size of compiled contracts
 	contractSizer: {
 		runOnCompile: true,
 		strict: true
@@ -75,19 +107,24 @@ module.exports = {
 	gasReporter: {
 		currency: 'USD',
 		showTimeSpent: true,
-		coinmarketcap: process.env.COINMARKETCAP_API_KEY || undefined
+		coinmarketcap: COINMARKETCAP_API_KEY || undefined
 	},
+	// Etherscan plugin takes care of verifying contracts on the block explorers.
 	etherscan: {
+		// Supported blockchains are here
 		apiKey: {
-			mainnet: process.env.ETHERSCAN_API_KEY,
-			sepolia: process.env.ETHERSCAN_API_KEY,
+			mainnet: ETHERSCAN_API_KEY,
+			sepolia: ETHERSCAN_API_KEY, // This is correct, ETH and Sepolia share the same service
 
-			polygon: process.env.POLYGONSCAN_API_KEY,
-			polygonAmoy: process.env.OKLINK_API_KEY,
+			polygon: POLYGONSCAN_API_KEY,
+			polygonAmoy: OKLINK_API_KEY,
 
-			base: process.env.BASESCAN_API_KEY,
-			astar: process.env.BLOCKSCOUT_API_KEY,
+			base: BASESCAN_API_KEY,
+			astar: BLOCKSCOUT_API_KEY,
+
+			core: CORESCAN_API_KEY,
 		},
+		// Chains not supported by default are added here
 		customChains: [
 			{
 				network: "astar",
@@ -98,22 +135,13 @@ module.exports = {
 				}
 			},
 			{
-				network: "polygonAmoy",
-				chainId: 80002,
+				network: "core",
+				chainId: 1116,
 				urls: {
-					apiURL: "https://www.oklink.com/api/explorer/v1/contract/verify/async/api/polygonAmoy",
-					browserURL: "https://www.oklink.com/polygonAmoy"
-				},
+					apiURL: "https://openapi.coredao.org/api",
+					browserURL: "https://scan.coredao.org/"
+				}
 			},
-			{
-				network: "base",
-				chainId: 80002,
-				urls: {
-					apiURL: "https://api.basescan.org/api",
-					browserURL: "https://basescan.org/"
-				},
-			}
 		],
-		
 	}
 };

@@ -12,19 +12,22 @@ Environment variables
 | AMOY_RPC | RPC endpoint for Matic Amoy |
 | MATIC_RPC | RPC endpoint for Matic Mainnet |
 | BASE_RPC | RPC endpoint for Base Mainnet |
+| CORE_RPC | RPC endpoint for Core Mainnet |
 | ADDRESS_PRIVATE_KEY | Private key of the deployer wallet |
 | COINMARKETCAP_API_KEY | API Key from coinmarketcap for hardhat's gas price estimations (optional) |
 | ETHERSCAN_API_KEY | API key for Etherscan (used for verifying contracts) |
 | POLYGONSCAN_API_KEY | API key for Polygonscan (used for verifying contracts) |
 
 ## Deploying
-Inside the deploy directory you'll find the scripts for all of the diamond contract facets and the 3 main diamond contracts used by the RAIR system:  
+Inside the deploy directory you'll find the scripts for all of the diamond contract facets and the 5 main diamond contracts used by the RAIR system:  
 
 | Contract | Description |
 | --- | --- |
 | Factory | In charge of deploying the ERC721 diamonds |
 | Marketplace | Minting and resale offers |
 | Facet Source | Diamond contract from which all ERC721 contracts get their facets |
+| ERC20 | Normal contract for the RAIR token |
+| 721Exchange | Auxiliary contract to swap RAIR tokens with an NFT |
 
 The deployment process is automated, it is done thanks to hardhat-deploy and the verification is done through hardhat-verify.  All deployed contracts can be found in the "deployments" directory
 
