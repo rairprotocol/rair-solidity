@@ -11,8 +11,8 @@ const initialRAIR20Supply = 10000;
 const priceToDeploy = 150;
 
 // Expected deployment addresses
-const firstDeploymentAddress = '0x4D86E5917eA0542Bd330BC6b8a576e9E4595F9eC';
-const secondDeploymentAddress = '0x5fA238add25567Ea714f218A4CB789EE3eFD72b8';
+const firstDeploymentAddress = '0x88Ec5C8192458d727177CcE65C5A0eB8A6C90F27';
+const secondDeploymentAddress = '0x06D6Fd5CAA224893341eEd17B5bad8CeA7D7d127';
 
 let usedSelectorsForFactory = {};
 let usedSelectorsForMarketplace = {};
