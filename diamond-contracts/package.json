@@ -22,6 +22,7 @@
     "test": "npx hardhat test",
     "deploy-sepolia": "npx hardhat --network 0xaa36a7 deploy",
     "deploy-amoy": "npx hardhat --network 0x13882 deploy",
+    "deploy-minato": "npx hardhat --network 0x79a deploy",
     "PAYABLE-deploy-base": "npx hardhat --network 0x2105 deploy",
     "PAYABLE-deploy-astar": "npx hardhat --network 0x250 deploy",
     "PAYABLE-deploy-matic": "npx hardhat --network 0x89 deploy",

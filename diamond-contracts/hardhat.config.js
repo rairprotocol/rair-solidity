@@ -19,6 +19,7 @@ const {
 	AMOY_RPC,
 	BASE_RPC,
 	CORE_RPC,
+	MINATO_RPC,
 	COINMARKETCAP_API_KEY,
 	ETHERSCAN_API_KEY,
 	POLYGONSCAN_API_KEY,
@@ -69,6 +70,10 @@ module.exports = {
 		},
 		"0x45c": {
 			url: CORE_RPC,
+			...commonConfig,
+		},
+		"0x79a": {
+			url: MINATO_RPC,
 			...commonConfig,
 		}
 	},
@@ -123,6 +128,7 @@ module.exports = {
 			astar: BLOCKSCOUT_API_KEY,
 
 			core: CORESCAN_API_KEY,
+			minato: '???' // Any value should work
 		},
 		// Chains not supported by default are added here
 		customChains: [
@@ -140,6 +146,14 @@ module.exports = {
 				urls: {
 					apiURL: "https://openapi.coredao.org/api",
 					browserURL: "https://scan.coredao.org/"
+				}
+			},
+			{
+				network: "minato",
+				chainId: 1946,
+				urls: {
+					apiURL: "https://explorer-testnet.soneium.org/api/",
+					browserURL: "https://explorer-testnet.soneium.org/"
 				}
 			},
 		],
