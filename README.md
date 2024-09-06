@@ -63,7 +63,7 @@ Once all diamond facets are verified you'll need to connect them with the diamon
 | Functions | Description |
 | --- | --- | 
 | Factory.changeToken(ERC20 address, Price for deployment) | Configure the factory to use tokens from the ERC20 to deploy |
-| Factory.setSourceFacet(Facet source address) | Connect the factory to the main hub of diamond facets |
+| Factory.setFacetSource(Facet source address) | Connect the factory to the main hub of diamond facets |
 | Marketplace.updateTreasuryAddress(Treasury address) | Set the address for the treasury fees |
 | Marketplace.updateTreasuryFee(Value) | Percentage the treasury will receive on every mint  |
 | Marketplace.grantRole(RESALE_ADMIN, Signer address) | Approve an user address to generate resale hashes |
