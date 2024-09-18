@@ -19,6 +19,8 @@ contract ResaleFacet is AccessControlAppStorageEnumerableMarket, SignedHashProte
 
     event TokenSold(address erc721Address, address buyer, address seller, uint token, uint tokenPrice);
     event TokenOfferCreated(address erc721Address, address seller, uint token, uint tokenPrice, uint offerId);
+    event TokenOfferUpdated(uint offerId, uint newTokenPrice);
+    event TokenOfferDeleted(uint offerId);
     
     modifier onlyOwnerOfContract(address erc721) {
         ResaleStorage.Layout storage data = ResaleStorage.layout();
@@ -161,6 +163,31 @@ contract ResaleFacet is AccessControlAppStorageEnumerableMarket, SignedHashProte
             newOffer.tokenPrice,
             ResaleStorage.layout().resaleOffers.length - 1
         );
+    }
+
+    function updateGasTokenOffer(
+        uint offerIndex,
+        uint newPrice
+    ) public {
+        ResaleStorage.resaleOffer storage offer = ResaleStorage.layout().resaleOffers[offerIndex];
+        require(
+            IERC721(offer.erc721).ownerOf(offer.token) == msg.sender,
+            "Resale: Not the current owner of the token"
+        );
+        offer.tokenPrice = newPrice;
+        emit TokenOfferUpdated(offerIndex, offer.tokenPrice);
+    }
+
+    function deleteGasTokenOffer(
+        uint offerIndex
+    ) public {
+        ResaleStorage.resaleOffer storage offer = ResaleStorage.layout().resaleOffers[offerIndex];
+        require(
+            IERC721(offer.erc721).ownerOf(offer.token) == msg.sender,
+            "Resale: Not the current owner of the token"
+        );
+        offer.erc721 = address(0);
+        emit TokenOfferDeleted(offerIndex);
     }
 
     function getResaleOffer(

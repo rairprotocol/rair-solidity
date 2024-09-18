@@ -2440,6 +2440,19 @@ describe("Diamonds", function () {
 					300000,					 // Token Price
 					0						 // Offer ID
 				)
+			await expect(await resaleInstance.connect(owner).createGasTokenOffer(
+					secondDeploymentAddress, // ERC721 address
+					1,						 // Token number
+					9000000,				 // Token Price
+					nodeAddress.address		 // Node address
+				)).to.emit(resaleInstance, 'TokenOfferCreated')
+					.withArgs(
+						secondDeploymentAddress, // ERC721 address
+						owner.address,			 // Seller address
+						1,						 // Token ID
+						9000000,				 // Token Price
+						1						 // Offer ID
+					)
 		});
 
 		it ("Should display created offers", async () => {
@@ -2452,6 +2465,40 @@ describe("Diamonds", function () {
 			await expect(result.seller).to.equal(addr3.address);
 			await expect(result.token).to.equal(0);
 			await expect(result.tokenPrice).to.equal(300000);
+		});
+
+		it ("Should update offers", async () => {
+			const resaleInstance = (await ethers.getContractAt(
+				'ResaleFacet',
+				marketDiamondInstance.address
+			)).connect(addr3);
+			await expect(await resaleInstance.updateGasTokenOffer(0, 500000))
+				.to.emit(resaleInstance, 'TokenOfferUpdated')
+				.withArgs(
+					0,
+					500000
+				);
+			const result = await resaleInstance.getResaleOffer(0);
+			await expect(result.tokenPrice).to.equal(500000);
+
+			await expect(await resaleInstance.updateGasTokenOffer(0, 300000))
+				.to.emit(resaleInstance, 'TokenOfferUpdated')
+				.withArgs(
+					0,
+					300000
+				);
+		});
+
+		it ("Should delete offers", async () => {
+			const resaleInstance = (await ethers.getContractAt(
+				'ResaleFacet',
+				marketDiamondInstance.address
+			));
+			await expect(await resaleInstance.deleteGasTokenOffer(1))
+				.to.emit(resaleInstance, 'TokenOfferDeleted')
+				.withArgs(1);
+			const result = await resaleInstance.getResaleOffer(1);
+			await expect(result.erc721).to.equal(ethers.constants.AddressZero);
 		});
 
 		it ("Shouldn't purchase resale offers without enough funds", async () => {

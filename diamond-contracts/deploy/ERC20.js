@@ -10,7 +10,8 @@ module.exports = async ({ getUnnamedAccounts }) => {
 			"RAIR", 										// Name
 			"RAIR", 										// Symbol
 			utils.parseUnits('1000000000', 18), 			// Initial supply
-			// 0x00000000000000000000						// Owner address!
+			//"0x7849194dd593d6c3aed24035d70b5394a1c90f8f" 	// Garret - For Mainnets
+			"0xEC30759D0A3F3CE0A730920DC29d74e441f492C3" 	// Juan - For testnets
 		],
 		deployerAddress
 	);

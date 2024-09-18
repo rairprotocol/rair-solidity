@@ -112,7 +112,8 @@ module.exports = {
 	gasReporter: {
 		currency: 'USD',
 		showTimeSpent: true,
-		coinmarketcap: COINMARKETCAP_API_KEY || undefined
+		coinmarketcap: COINMARKETCAP_API_KEY || undefined,
+		L1Etherscan: ETHERSCAN_API_KEY || undefined,
 	},
 	// Etherscan plugin takes care of verifying contracts on the block explorers.
 	etherscan: {
