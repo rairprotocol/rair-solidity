@@ -11,8 +11,8 @@ const initialRAIR20Supply = 10000;
 const priceToDeploy = 150;
 
 // Expected deployment addresses
-const firstDeploymentAddress = '0x88Ec5C8192458d727177CcE65C5A0eB8A6C90F27';
-const secondDeploymentAddress = '0x06D6Fd5CAA224893341eEd17B5bad8CeA7D7d127';
+const firstDeploymentAddress = '0xE712663F8E29c911CcAe48C09D6Cbc29123aD156';
+const secondDeploymentAddress = '0xb37a8C9188B52040eABcbCAa15F25aE418fa5f11';
 
 let usedSelectorsForFactory = {};
 let usedSelectorsForMarketplace = {};
@@ -1906,7 +1906,6 @@ describe("Diamonds", function () {
 			await expect(await (await extraERC20Instance.connect(addr1)).approve(factoryDiamondInstance.address, 2500))
 				.to.emit(extraERC20Instance, 'Approval')
 				.withArgs(addr1.address, factoryDiamondInstance.address, 2500);
-			console.info(await extraERC20Instance.balanceOf(addr1.address), await extraERC20Instance.balanceOf(owner.address));
 		});
 
 		it("Should take tokens after approval", async () => {
@@ -1941,7 +1940,7 @@ describe("Diamonds", function () {
 		it ("Should setup the time limit", async () => {
 			const pointsInstanceWithWithdraw = await ethers.getContractAt('PointsWithdraw', factoryDiamondInstance.address);
 			// A bit over 3 minutes limit before hash expires
-			await pointsInstanceWithWithdraw.setWithdrawTimeLimit(200);
+			await pointsInstanceWithWithdraw.setWithdrawTimeLimit(300);
 		});
 
 		it ("Shouldn't generate a signed message if amount is greater than balance", async () => {
@@ -1960,7 +1959,7 @@ describe("Diamonds", function () {
 			const pointsInstanceWithWithdraw = await ethers.getContractAt('PointsWithdraw', factoryDiamondInstance.address);
 			const withdrawValue = [
 				extraERC20Instance.address, 	// ERC20
-				1000,					// Amount
+				1000,							// Amount
 			];
 			const withdrawMessage = await pointsInstanceWithWithdraw.getWithdrawHash(
 				addr1.address,
@@ -2480,13 +2479,24 @@ describe("Diamonds", function () {
 				);
 			const result = await resaleInstance.getResaleOffer(0);
 			await expect(result.tokenPrice).to.equal(500000);
+		});
 
-			await expect(await resaleInstance.updateGasTokenOffer(0, 300000))
-				.to.emit(resaleInstance, 'TokenOfferUpdated')
-				.withArgs(
-					0,
-					300000
-				);
+		it ("Shouldn't update offers if user is not owner", async () => {
+			const resaleInstance = (await ethers.getContractAt(
+				'ResaleFacet',
+				marketDiamondInstance.address
+			)).connect(addr3);
+			await expect(resaleInstance.updateGasTokenOffer(1, 500000))
+				.to.be.revertedWith("Resale: Not the current owner of the token");
+		});
+
+		it ("Shouldn't delete offers if user is not owner", async () => {
+			const resaleInstance = (await ethers.getContractAt(
+				'ResaleFacet',
+				marketDiamondInstance.address
+			)).connect(addr3);
+			await expect(resaleInstance.deleteGasTokenOffer(1))
+				.to.be.revertedWith("Resale: Not the current owner of the token");
 		});
 
 		it ("Should delete offers", async () => {
@@ -2505,8 +2515,14 @@ describe("Diamonds", function () {
 			const resaleInstance = await ethers.getContractAt('ResaleFacet', marketDiamondInstance.address);
 			await expect(resaleInstance.purchaseGasTokenOffer(
 				0, // Offer Id
-				{value: 2000}
+				{value: 300000}
 			)).to.be.revertedWith("Resale: Insufficient funds!");
+			await expect(await resaleInstance.connect(addr3).updateGasTokenOffer(0, 300000))
+				.to.emit(resaleInstance, 'TokenOfferUpdated')
+				.withArgs(
+					0,
+					300000
+				);
 		});
 
 		it ("Should purchase resale offers (stored in the blockchain)", async () => {
