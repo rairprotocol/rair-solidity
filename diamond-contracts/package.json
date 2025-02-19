@@ -8,7 +8,7 @@
     "chai": "^4.5.0",
     "dotenv": "^16.0.2",
     "ethers": "^5.7.0",
-    "hardhat": "^2.22.10",
+    "hardhat": "^2.22.18",
     "hardhat-contract-sizer": "^2.6.1",
     "hardhat-deploy": "^0.12.4",
     "hardhat-gas-reporter": "^2.2.1"

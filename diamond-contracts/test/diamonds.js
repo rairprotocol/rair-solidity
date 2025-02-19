@@ -11,8 +11,8 @@ const initialRAIR20Supply = 10000;
 const priceToDeploy = 150;
 
 // Expected deployment addresses
-const firstDeploymentAddress = '0xE712663F8E29c911CcAe48C09D6Cbc29123aD156';
-const secondDeploymentAddress = '0xb37a8C9188B52040eABcbCAa15F25aE418fa5f11';
+let firstDeploymentAddress;
+let secondDeploymentAddress;
 
 let usedSelectorsForFactory = {};
 let usedSelectorsForMarketplace = {};
@@ -511,7 +511,10 @@ describe("Diamonds", function () {
 
 		it ("Should deploy a RAIR contract after approving the tokens", async() => {
 			const receiverFacet = await ethers.getContractAt('DeployerFacet', factoryDiamondInstance.address);
-			await expect(await receiverFacet.deployContract("TestRairOne!", "RAIR"))
+			const result = await receiverFacet.deployContract("TestRairOne!", "RAIR");
+			// Get the deployed address, so if the block number is changed the test still pass
+			firstDeploymentAddress = (await result.wait()).events.at(-1).args.at(2);
+			await expect(result)
 				.to.emit(receiverFacet, 'DeployedContract')
 				.withArgs(owner.address, 0, firstDeploymentAddress, 'TestRairOne!')
 				.to.emit(erc20Instance, "Transfer")
@@ -524,7 +527,10 @@ describe("Diamonds", function () {
 
 		it ("Should return excess tokens from the deployment", async() => {
 			const receiverFacet = await ethers.getContractAt('DeployerFacet', factoryDiamondInstance.address);
-			await expect(await receiverFacet.deployContract('TestRairTwo!', 'HOT'))
+			const result = await receiverFacet.deployContract('TestRairTwo!', 'HOT');
+			// Get the deployed address, so if the block number is changed the test still pass
+			secondDeploymentAddress = (await result.wait()).events.at(-1).args.at(2);
+			await expect(result)
 				.to.emit(receiverFacet, 'DeployedContract')
 				.withArgs(owner.address, 1, secondDeploymentAddress, 'TestRairTwo!');
 			await expect(await erc20Instance.balanceOf(owner.address))
