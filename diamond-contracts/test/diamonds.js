@@ -53,6 +53,8 @@ describe("Diamonds", function () {
 
 	let ExchangeFactory, exchangeInstance;
 
+	let MultiSendFacetFactory, multiSendFacetInstance;
+
 	beforeEach(async () => {
 		//console.log(ethers.utils.formatEther(await ethers.provider.getBalance(owner.address)));
 	})
@@ -106,6 +108,9 @@ describe("Diamonds", function () {
 		// Malicious contracts for testing
 		ReceiveEthAttackerFactory = await ethers.getContractFactory("ReceiveEthAttacker");
 		ExchangeFactory = await ethers.getContractFactory("ERC20Exchange");
+
+		// Multi send tool (part of marketplace)
+		MultiSendFacetFactory = await ethers.getContractFactory("MultiSendTool");
 	});
 
 	describe("Deploying normal contracts", () => {
@@ -225,6 +230,11 @@ describe("Diamonds", function () {
 		it ("Should deploy the Points Withdraw Facet", async () => {
 			pointsWithdrawInstance = await PointsWithdrawFactory.deploy();
 			await pointsWithdrawInstance.deployed();
+		});
+
+		it ("Should deploy the Points Withdraw Facet", async () => {
+			multiSendFacetInstance = await MultiSendFacetFactory.deploy();
+			await multiSendFacetInstance.deployed();
 		});
 	});
 
@@ -433,6 +443,18 @@ describe("Diamonds", function () {
 				facetAddress: resaleFacetInstance.address,
 				action: FacetCutAction_ADD,
 				functionSelectors: getSelectors(resaleFacetInstance, usedSelectorsForMarketplace)
+			}
+			await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
+				.to.emit(diamondCut, "DiamondCut");
+				//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
+		});
+
+		it ("Should add the MultiSend tools", async () => {
+			const diamondCut = await ethers.getContractAt('IDiamondCut', marketDiamondInstance.address);
+			const receiverFacetItem = {
+				facetAddress: multiSendFacetInstance.address,
+				action: FacetCutAction_ADD,
+				functionSelectors: getSelectors(multiSendFacetInstance, usedSelectorsForMarketplace)
 			}
 			await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
 				.to.emit(diamondCut, "DiamondCut");
@@ -2685,6 +2707,241 @@ describe("Diamonds", function () {
 			)).to.be.revertedWith('License Mint: Invalid signature')
 		});
 
+	});
+
+	describe("Multi Send", () => {
+		it ("Should approve before sending", async () => {
+			const approvalValue = 60;
+			await expect(
+				await erc20Instance.approve(
+					marketDiamondInstance.address,
+					approvalValue
+				)
+			).to.not.be.reverted;
+			await expect(
+				await erc20Instance.allowance(
+					owner.address,
+					marketDiamondInstance.address
+				)
+			).to.equal(approvalValue);
+		});
+
+		it ("Shouldn't send with invalid array sizes", async () => {
+			const multiSendInstance = await ethers.getContractAt('MultiSendTool', marketDiamondInstance.address);
+			await expect(
+				multiSendInstance.multiSendERC20(
+					erc20Instance.address,
+					[owner.address, addr1.address],
+					[1]
+				)
+			).to.be.revertedWith("MultiSend: Invalid array sizes");
+			await expect(
+				multiSendInstance.multiSendERC20(
+					erc20Instance.address,
+					[owner.address],
+					[1, 1]
+				)
+			).to.be.revertedWith("MultiSend: Invalid array sizes");
+		});
+
+		it ("Should send to different recipients", async () => {
+			const multiSendInstance = await ethers.getContractAt('MultiSendTool', marketDiamondInstance.address);
+			await expect(await multiSendInstance.multiSendERC20(
+				erc20Instance.address,
+				[
+					addr1.address,
+					addr1.address,
+					addr1.address,
+					addr1.address,
+					addr1.address,
+					addr1.address,
+					addr1.address,
+					addr1.address,
+					addr1.address,
+					addr1.address,
+					
+					addr2.address,
+					addr2.address,
+					addr2.address,
+					addr2.address,
+					addr2.address,
+					addr2.address,
+					addr2.address,
+					addr2.address,
+					addr2.address,
+					addr2.address,
+
+					addr3.address,
+					addr3.address,
+					addr3.address,
+					addr3.address,
+					addr3.address,
+					addr3.address,
+					addr3.address,
+					addr3.address,
+					addr3.address,
+					addr3.address,
+
+					addr4.address,
+					addr4.address,
+					addr4.address,
+					addr4.address,
+					addr4.address,
+					addr4.address,
+					addr4.address,
+					addr4.address,
+					addr4.address,
+					addr4.address,
+
+					treasuryAddress.address,
+					treasuryAddress.address,
+					treasuryAddress.address,
+					treasuryAddress.address,
+					treasuryAddress.address,
+					treasuryAddress.address,
+					treasuryAddress.address,
+					treasuryAddress.address,
+					treasuryAddress.address,
+					treasuryAddress.address,
+
+					nodeAddress.address,
+					nodeAddress.address,
+					nodeAddress.address,
+					nodeAddress.address,
+					nodeAddress.address,
+					nodeAddress.address,
+					nodeAddress.address,
+					nodeAddress.address,
+					nodeAddress.address,
+					nodeAddress.address,
+				],
+				[
+					1,1,1,1,1,1,1,1,1,1,
+					1,1,1,1,1,1,1,1,1,1,
+					1,1,1,1,1,1,1,1,1,1,
+					1,1,1,1,1,1,1,1,1,1,
+					1,1,1,1,1,1,1,1,1,1,
+					1,1,1,1,1,1,1,1,1,1,
+				] //60
+			)).to.not.be.reverted;
+			await expect(await erc20Instance.allowance(owner.address, marketDiamondInstance.address)).to.equal(0);
+			await expect(await erc20Instance.balanceOf(owner.address)).to.equal(7940);
+			await expect(await erc20Instance.balanceOf(addr1.address)).to.equal(10);
+			await expect(await erc20Instance.balanceOf(addr2.address)).to.equal(10);
+			await expect(await erc20Instance.balanceOf(addr3.address)).to.equal(1710);
+			await expect(await erc20Instance.balanceOf(addr4.address)).to.equal(10);
+			await expect(await erc20Instance.balanceOf(treasuryAddress.address)).to.equal(10);
+			await expect(await erc20Instance.balanceOf(nodeAddress.address)).to.equal(10);
+		});
+
+		it ("Shouldn't send tokens without further approval", async () => {
+			const multiSendInstance = await ethers.getContractAt('MultiSendTool', marketDiamondInstance.address);
+			await expect(
+				multiSendInstance.multiSendERC20(
+					erc20Instance.address,
+					[owner.address],
+					[1]
+				)
+			).to.be.revertedWith("ERC20InsufficientAllowance");
+		});
+
+		it ("Should send tokens with the same amount", async () => {
+			const approvalValue = 60;
+			await expect(
+				await erc20Instance.approve(
+					marketDiamondInstance.address,
+					approvalValue
+				)
+			).to.not.be.reverted;
+			await expect(
+				await erc20Instance.allowance(
+					owner.address,
+					marketDiamondInstance.address
+				)
+			).to.equal(approvalValue);
+
+
+			const multiSendInstance = await ethers.getContractAt('MultiSendTool', marketDiamondInstance.address);
+			await expect(await multiSendInstance.multiSendERC20SameAmount(
+				erc20Instance.address,
+				[
+					addr1.address,
+					addr1.address,
+					addr1.address,
+					addr1.address,
+					addr1.address,
+					addr1.address,
+					addr1.address,
+					addr1.address,
+					addr1.address,
+					addr1.address,
+					
+					addr2.address,
+					addr2.address,
+					addr2.address,
+					addr2.address,
+					addr2.address,
+					addr2.address,
+					addr2.address,
+					addr2.address,
+					addr2.address,
+					addr2.address,
+
+					addr3.address,
+					addr3.address,
+					addr3.address,
+					addr3.address,
+					addr3.address,
+					addr3.address,
+					addr3.address,
+					addr3.address,
+					addr3.address,
+					addr3.address,
+
+					addr4.address,
+					addr4.address,
+					addr4.address,
+					addr4.address,
+					addr4.address,
+					addr4.address,
+					addr4.address,
+					addr4.address,
+					addr4.address,
+					addr4.address,
+
+					treasuryAddress.address,
+					treasuryAddress.address,
+					treasuryAddress.address,
+					treasuryAddress.address,
+					treasuryAddress.address,
+					treasuryAddress.address,
+					treasuryAddress.address,
+					treasuryAddress.address,
+					treasuryAddress.address,
+					treasuryAddress.address,
+
+					nodeAddress.address,
+					nodeAddress.address,
+					nodeAddress.address,
+					nodeAddress.address,
+					nodeAddress.address,
+					nodeAddress.address,
+					nodeAddress.address,
+					nodeAddress.address,
+					nodeAddress.address,
+					nodeAddress.address,
+				],
+				1  //60 tokens per user
+			)).to.not.be.reverted;
+			await expect(await erc20Instance.allowance(owner.address, marketDiamondInstance.address)).to.equal(0);
+			await expect(await erc20Instance.balanceOf(owner.address)).to.equal(7880);
+			await expect(await erc20Instance.balanceOf(addr1.address)).to.equal(20);
+			await expect(await erc20Instance.balanceOf(addr2.address)).to.equal(20);
+			await expect(await erc20Instance.balanceOf(addr3.address)).to.equal(1720);
+			await expect(await erc20Instance.balanceOf(addr4.address)).to.equal(20);
+			await expect(await erc20Instance.balanceOf(treasuryAddress.address)).to.equal(20);
+			await expect(await erc20Instance.balanceOf(nodeAddress.address)).to.equal(20);
+		});
 	});
 
 	describe("Loupe Facet", () => {

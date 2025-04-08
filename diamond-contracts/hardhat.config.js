@@ -40,7 +40,7 @@ module.exports = {
 		hardhat: {
 			forking: {
 				url: ETH_MAIN_RPC,
-				blockNumber: 21876811, // Remove to make a new fork every time, it's slow
+				blockNumber: 22221970, // Remove to make a new fork every time, slow
 			}
 		},
 		// The rest of the blockchains are for deployment
