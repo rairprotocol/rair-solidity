@@ -1,0 +1,145 @@
+{
+  "address": "0x9c7fcDe70E211a112F3b8b59E1b36F87A2E282e8",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "erc20Address",
+          "type": "address"
+        },
+        {
+          "internalType": "address payable[]",
+          "name": "recipients",
+          "type": "address[]"
+        },
+        {
+          "internalType": "uint256[]",
+          "name": "amounts",
+          "type": "uint256[]"
+        }
+      ],
+      "name": "multiSendERC20",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "erc20Address",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        },
+        {
+          "internalType": "address payable[]",
+          "name": "recipients",
+          "type": "address[]"
+        },
+        {
+          "internalType": "uint256[]",
+          "name": "amounts",
+          "type": "uint256[]"
+        }
+      ],
+      "name": "multiSendERC20From",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "erc20Address",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        },
+        {
+          "internalType": "address payable[]",
+          "name": "recipients",
+          "type": "address[]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "multiSendERC20FromSameAmount",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "erc20Address",
+          "type": "address"
+        },
+        {
+          "internalType": "address payable[]",
+          "name": "recipients",
+          "type": "address[]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "multiSendERC20SameAmount",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0x424bb39d48a6a691d77d6f09167c8b1b83393fa682978263d39ee20dfbb6bdcf",
+  "receipt": {
+    "to": null,
+    "from": "0xEC30759D0A3F3CE0A730920DC29d74e441f492C3",
+    "contractAddress": "0x9c7fcDe70E211a112F3b8b59E1b36F87A2E282e8",
+    "transactionIndex": 193,
+    "gasUsed": "372037",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0xca990ea80e86622ed72e321d0d6f04a29372f8fd7cd321eb730eb5bd3214cb80",
+    "transactionHash": "0x424bb39d48a6a691d77d6f09167c8b1b83393fa682978263d39ee20dfbb6bdcf",
+    "logs": [],
+    "blockNumber": 8075169,
+    "cumulativeGasUsed": "24092809",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "numDeployments": 1,
+  "solcInputHash": "880c1f3dc89d880dfefdd688a9a4f0cb",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.25+commit.b61c2a91\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"erc20Address\",\"type\":\"address\"},{\"internalType\":\"address payable[]\",\"name\":\"recipients\",\"type\":\"address[]\"},{\"internalType\":\"uint256[]\",\"name\":\"amounts\",\"type\":\"uint256[]\"}],\"name\":\"multiSendERC20\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"erc20Address\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"},{\"internalType\":\"address payable[]\",\"name\":\"recipients\",\"type\":\"address[]\"},{\"internalType\":\"uint256[]\",\"name\":\"amounts\",\"type\":\"uint256[]\"}],\"name\":\"multiSendERC20From\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"erc20Address\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"},{\"internalType\":\"address payable[]\",\"name\":\"recipients\",\"type\":\"address[]\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"multiSendERC20FromSameAmount\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"erc20Address\",\"type\":\"address\"},{\"internalType\":\"address payable[]\",\"name\":\"recipients\",\"type\":\"address[]\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"multiSendERC20SameAmount\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"title\":\"RAIR Diamond - Multi send facet\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"notice\":\"Tool to send multiple ERC20 tokens\",\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/Marketplace/Facets/MultiSend.sol\":\"MultiSendTool\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"@openzeppelin/contracts/token/ERC20/IERC20.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v5.0.0) (token/ERC20/IERC20.sol)\\n\\npragma solidity ^0.8.20;\\n\\n/**\\n * @dev Interface of the ERC20 standard as defined in the EIP.\\n */\\ninterface IERC20 {\\n    /**\\n     * @dev Emitted when `value` tokens are moved from one account (`from`) to\\n     * another (`to`).\\n     *\\n     * Note that `value` may be zero.\\n     */\\n    event Transfer(address indexed from, address indexed to, uint256 value);\\n\\n    /**\\n     * @dev Emitted when the allowance of a `spender` for an `owner` is set by\\n     * a call to {approve}. `value` is the new allowance.\\n     */\\n    event Approval(address indexed owner, address indexed spender, uint256 value);\\n\\n    /**\\n     * @dev Returns the value of tokens in existence.\\n     */\\n    function totalSupply() external view returns (uint256);\\n\\n    /**\\n     * @dev Returns the value of tokens owned by `account`.\\n     */\\n    function balanceOf(address account) external view returns (uint256);\\n\\n    /**\\n     * @dev Moves a `value` amount of tokens from the caller's account to `to`.\\n     *\\n     * Returns a boolean value indicating whether the operation succeeded.\\n     *\\n     * Emits a {Transfer} event.\\n     */\\n    function transfer(address to, uint256 value) external returns (bool);\\n\\n    /**\\n     * @dev Returns the remaining number of tokens that `spender` will be\\n     * allowed to spend on behalf of `owner` through {transferFrom}. This is\\n     * zero by default.\\n     *\\n     * This value changes when {approve} or {transferFrom} are called.\\n     */\\n    function allowance(address owner, address spender) external view returns (uint256);\\n\\n    /**\\n     * @dev Sets a `value` amount of tokens as the allowance of `spender` over the\\n     * caller's tokens.\\n     *\\n     * Returns a boolean value indicating whether the operation succeeded.\\n     *\\n     * IMPORTANT: Beware that changing an allowance with this method brings the risk\\n     * that someone may use both the old and the new allowance by unfortunate\\n     * transaction ordering. One possible solution to mitigate this race\\n     * condition is to first reduce the spender's allowance to 0 and set the\\n     * desired value afterwards:\\n     * https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729\\n     *\\n     * Emits an {Approval} event.\\n     */\\n    function approve(address spender, uint256 value) external returns (bool);\\n\\n    /**\\n     * @dev Moves a `value` amount of tokens from `from` to `to` using the\\n     * allowance mechanism. `value` is then deducted from the caller's\\n     * allowance.\\n     *\\n     * Returns a boolean value indicating whether the operation succeeded.\\n     *\\n     * Emits a {Transfer} event.\\n     */\\n    function transferFrom(address from, address to, uint256 value) external returns (bool);\\n}\\n\",\"keccak256\":\"0xc6a8ff0ea489379b61faa647490411b80102578440ab9d84e9a957cc12164e70\",\"license\":\"MIT\"},\"contracts/Marketplace/Facets/MultiSend.sol\":{\"content\":\"// SPDX-License-Identifier: GPL-3.0\\npragma solidity ^0.8.25; \\n\\nimport { IERC20 } from '@openzeppelin/contracts/token/ERC20/IERC20.sol';\\n\\n/// @title  RAIR Diamond - Multi send facet\\n/// @notice Tool to send multiple ERC20 tokens\\ncontract MultiSendTool {\\n    function _multiSendSameAmount(\\n        address erc20Address,\\n        address sender,\\n        address payable[] calldata recipients,\\n        uint amount\\n    ) internal {\\n        IERC20 token = IERC20(erc20Address);\\n\\t\\tfor (uint i = 0; i < recipients.length; i++) {\\n            token.transferFrom(sender, recipients[i], amount);\\n        }\\n    }\\n\\n    function _multiSend(\\n        address erc20Address,\\n        address sender,\\n        address payable[] calldata recipients,\\n        uint[] calldata amounts\\n    ) internal {\\n        require(recipients.length == amounts.length, \\\"MultiSend: Invalid array sizes\\\");\\n        IERC20 token = IERC20(erc20Address);\\n\\t\\tfor (uint i = 0; i < recipients.length; i++) {\\n            token.transferFrom(sender, recipients[i], amounts[i]);\\n        }\\n    }\\n\\n\\tfunction multiSendERC20(\\n        address erc20Address,\\n        address payable[] calldata recipients,\\n        uint[] calldata amounts\\n    ) external {\\n        _multiSend(\\n            erc20Address,\\n            msg.sender,\\n            recipients,\\n            amounts\\n        );\\n\\t}\\n\\n    function multiSendERC20From(\\n        address erc20Address,\\n        address sender,\\n        address payable[] calldata recipients,\\n        uint[] calldata amounts\\n    ) external {\\n        _multiSend(\\n            erc20Address,\\n            sender,\\n            recipients,\\n            amounts\\n        );\\n\\t}\\n\\n    function multiSendERC20SameAmount(\\n        address erc20Address,\\n        address payable[] calldata recipients,\\n        uint amount\\n    ) external {\\n        _multiSendSameAmount(\\n            erc20Address,\\n            msg.sender,\\n            recipients,\\n            amount\\n        );\\n\\t}\\n\\n    function multiSendERC20FromSameAmount(\\n        address erc20Address,\\n        address sender,\\n        address payable[] calldata recipients,\\n        uint amount\\n    ) external {\\n        _multiSendSameAmount(\\n            erc20Address,\\n            sender,\\n            recipients,\\n            amount\\n        );\\n\\t}\\n}\",\"keccak256\":\"0xc3386550872b7bcc45bc512c3063886e549b722e7b00d1c55d7cc92110485ae6\",\"license\":\"GPL-3.0\"}},\"version\":1}",
+  "bytecode": "0x6080604052348015600f57600080fd5b506105c58061001f6000396000f3fe608060405234801561001057600080fd5b506004361061004c5760003560e01c80631a3d05de14610051578063348204e91461006657806382d15ac714610079578063f93b5aac1461008c575b600080fd5b61006461005f366004610352565b61009f565b005b6100646100743660046103ae565b6100b2565b610064610087366004610443565b6100c8565b61006461009a3660046104c6565b6100dd565b6100ac84338585856100e6565b50505050565b6100c08686868686866101b3565b505050505050565b6100d68533868686866101b3565b5050505050565b6100d685858585855b8460005b838110156101aa57816001600160a01b03166323b872dd8787878581811061011457610114610533565b90506020020160208101906101299190610549565b6040516001600160e01b031960e085901b1681526001600160a01b03928316600482015291166024820152604481018690526064016020604051808303816000875af115801561017d573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906101a1919061056d565b506001016100ea565b50505050505050565b8281146102065760405162461bcd60e51b815260206004820152601e60248201527f4d756c746953656e643a20496e76616c69642061727261792073697a65730000604482015260640160405180910390fd5b8560005b848110156102e457816001600160a01b03166323b872dd8888888581811061023457610234610533565b90506020020160208101906102499190610549565b87878681811061025b5761025b610533565b6040516001600160e01b031960e088901b1681526001600160a01b039586166004820152949093166024850152506020909102013560448201526064016020604051808303816000875af11580156102b7573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906102db919061056d565b5060010161020a565b5050505050505050565b6001600160a01b038116811461030357600080fd5b50565b60008083601f84011261031857600080fd5b50813567ffffffffffffffff81111561033057600080fd5b6020830191508360208260051b850101111561034b57600080fd5b9250929050565b6000806000806060858703121561036857600080fd5b8435610373816102ee565b9350602085013567ffffffffffffffff81111561038f57600080fd5b61039b87828801610306565b9598909750949560400135949350505050565b600080600080600080608087890312156103c757600080fd5b86356103d2816102ee565b955060208701356103e2816102ee565b9450604087013567ffffffffffffffff808211156103ff57600080fd5b61040b8a838b01610306565b9096509450606089013591508082111561042457600080fd5b5061043189828a01610306565b979a9699509497509295939492505050565b60008060008060006060868803121561045b57600080fd5b8535610466816102ee565b9450602086013567ffffffffffffffff8082111561048357600080fd5b61048f89838a01610306565b909650945060408801359150808211156104a857600080fd5b506104b588828901610306565b969995985093965092949392505050565b6000806000806000608086880312156104de57600080fd5b85356104e9816102ee565b945060208601356104f9816102ee565b9350604086013567ffffffffffffffff81111561051557600080fd5b61052188828901610306565b96999598509660600135949350505050565b634e487b7160e01b600052603260045260246000fd5b60006020828403121561055b57600080fd5b8135610566816102ee565b9392505050565b60006020828403121561057f57600080fd5b8151801515811461056657600080fdfea2646970667358221220f649f6d5317e76c18d0f7b1d09abed9b46796854a4f411515b2f119e9e26dddd64736f6c63430008190033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b506004361061004c5760003560e01c80631a3d05de14610051578063348204e91461006657806382d15ac714610079578063f93b5aac1461008c575b600080fd5b61006461005f366004610352565b61009f565b005b6100646100743660046103ae565b6100b2565b610064610087366004610443565b6100c8565b61006461009a3660046104c6565b6100dd565b6100ac84338585856100e6565b50505050565b6100c08686868686866101b3565b505050505050565b6100d68533868686866101b3565b5050505050565b6100d685858585855b8460005b838110156101aa57816001600160a01b03166323b872dd8787878581811061011457610114610533565b90506020020160208101906101299190610549565b6040516001600160e01b031960e085901b1681526001600160a01b03928316600482015291166024820152604481018690526064016020604051808303816000875af115801561017d573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906101a1919061056d565b506001016100ea565b50505050505050565b8281146102065760405162461bcd60e51b815260206004820152601e60248201527f4d756c746953656e643a20496e76616c69642061727261792073697a65730000604482015260640160405180910390fd5b8560005b848110156102e457816001600160a01b03166323b872dd8888888581811061023457610234610533565b90506020020160208101906102499190610549565b87878681811061025b5761025b610533565b6040516001600160e01b031960e088901b1681526001600160a01b039586166004820152949093166024850152506020909102013560448201526064016020604051808303816000875af11580156102b7573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906102db919061056d565b5060010161020a565b5050505050505050565b6001600160a01b038116811461030357600080fd5b50565b60008083601f84011261031857600080fd5b50813567ffffffffffffffff81111561033057600080fd5b6020830191508360208260051b850101111561034b57600080fd5b9250929050565b6000806000806060858703121561036857600080fd5b8435610373816102ee565b9350602085013567ffffffffffffffff81111561038f57600080fd5b61039b87828801610306565b9598909750949560400135949350505050565b600080600080600080608087890312156103c757600080fd5b86356103d2816102ee565b955060208701356103e2816102ee565b9450604087013567ffffffffffffffff808211156103ff57600080fd5b61040b8a838b01610306565b9096509450606089013591508082111561042457600080fd5b5061043189828a01610306565b979a9699509497509295939492505050565b60008060008060006060868803121561045b57600080fd5b8535610466816102ee565b9450602086013567ffffffffffffffff8082111561048357600080fd5b61048f89838a01610306565b909650945060408801359150808211156104a857600080fd5b506104b588828901610306565b969995985093965092949392505050565b6000806000806000608086880312156104de57600080fd5b85356104e9816102ee565b945060208601356104f9816102ee565b9350604086013567ffffffffffffffff81111561051557600080fd5b61052188828901610306565b96999598509660600135949350505050565b634e487b7160e01b600052603260045260246000fd5b60006020828403121561055b57600080fd5b8135610566816102ee565b9392505050565b60006020828403121561057f57600080fd5b8151801515811461056657600080fdfea2646970667358221220f649f6d5317e76c18d0f7b1d09abed9b46796854a4f411515b2f119e9e26dddd64736f6c63430008190033",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "title": "RAIR Diamond - Multi send facet",
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "notice": "Tool to send multiple ERC20 tokens",
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [],
+    "types": null
+  }
+}
